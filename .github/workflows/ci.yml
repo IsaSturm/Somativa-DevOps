@@ -1,0 +1,32 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  lint:
+    name: Lint HTML/CSS/JS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Instalar dependências de lint
+        run: |
+          npm init -y
+          npm install htmlhint stylelint stylelint-config-standard --save-dev
+
+      - name: Rodar lint no HTML
+        run: npx htmlhint "**/*.html"
+
+      - name: Rodar lint no CSS
+        run: npx stylelint "**/*.css"

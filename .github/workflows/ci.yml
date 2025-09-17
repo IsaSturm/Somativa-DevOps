@@ -31,8 +31,11 @@ jobs:
       - name: Rodar lint no CSS
         run: npx stylelint "**/*.css"
 
-    discord:
-      - name: Discord Commits
+  discord:
+    name: Discord Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar mensagem para Discord
         uses: Sniddl/discord-commits@v1.6
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}

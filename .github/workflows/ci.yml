@@ -30,3 +30,11 @@ jobs:
 
       - name: Rodar lint no CSS
         run: npx stylelint "**/*.css"
+
+    discord:
+      - name: Discord Commits
+        uses: Sniddl/discord-commits@v1.6
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          template: "avatar-with-link"
+          include-extras: true

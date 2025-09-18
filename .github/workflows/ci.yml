@@ -30,7 +30,7 @@ jobs:
           npm install htmlhint stylelint stylelint-config-standard --save-dev
 
       - name: Rodar lint no HTML
-        run: npx htmlhint "**/*.html"
+        run: npx htmlhint "**/*.html" --ignore "coverage/**"
 
       - name: Rodar lint no CSS
         run: npx stylelint "**/*.css"

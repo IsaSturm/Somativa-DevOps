@@ -33,7 +33,7 @@ jobs:
         run: npx htmlhint "**/*.html" --ignore "coverage/**"
 
       - name: Rodar lint no CSS
-        run: npx stylelint "**/*.css"
+        run: npx stylelint "**/*.css" --ignore "coverage/**"
 
   discord:
     name: Discord Commits

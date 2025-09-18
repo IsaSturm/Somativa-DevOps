@@ -65,6 +65,7 @@ jobs:
           -  Seleção de elementos DOM
           -  Inicialização de eventos
           -  Validação de parâmetros
+          `;
           
           
           github.rest.issues.createComment({

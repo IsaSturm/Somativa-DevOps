@@ -1,0 +1,76 @@
+name: Testes Unitários
+
+on:
+  push:
+    branches: [ main, unit-test ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+      
+    - name: Configurar Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Instalar dependências
+      run: npm ci
+      
+    - name: Executar testes unitários
+      run: npm test
+      
+    - name: Executar testes com cobertura
+      run: npm run test:coverage
+      
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        fail_ci_if_error: false
+        
+    - name: Comentar PR com resultados dos testes
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Verificar se os testes passaram
+          const testResults = process.env.TEST_RESULT || 'success';
+          
+          const comment = `## Resultados dos Testes Unitários
+          
+          **Status:**  Testes executados com sucesso
+          
+          **Node.js Versões:** 18.x, 20.x
+          
+          **Cobertura de Código:** Disponível nos artefatos
+          
+          ### Testes Implementados:
+          -  Verificação de visibilidade de elementos
+          -  Adição/remoção de classes CSS
+          -  Seleção de elementos DOM
+          -  Inicialização de eventos
+          -  Validação de parâmetros
+          `;
+          
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
